@@ -20,6 +20,10 @@ works from.
    next reader is as likely to be an agent as a person, and both start with no context.
 6. **`AGENTS.md` is the one agent file.** Tool-specific files (`CLAUDE.md` and others) point to it and
    hold only what is specific to that tool (see [The agent files](#the-agent-files)).
+7. **The repo teaches.** People who can code learn its practices from it, and complete beginners
+   learn the basics from a folder of their own (see [Teaching](#teaching)).
+8. **Tools detect vulnerabilities; agents triage; people decide.** Live databases catch vulnerable
+   dependencies, and an agent explains and drafts the fix (see [Security](#security)).
 
 ## What "agent-friendly" means in practice
 
@@ -46,6 +50,9 @@ in correctly, and none of them is specific to one AI tool.
 ├── AGENTS.md                       the main agent file: how we work, commands, routing, rules
 ├── CLAUDE.md                       imports AGENTS.md; Claude-specific notes only
 ├── README.md                       what the repo is, for people
+├── CONTRIBUTING.md                 the git rules for contributors, in brief
+├── SECURITY.md                     how to report a vulnerability privately
+├── .editorconfig                   shared editor settings: encoding, line endings, indentation
 ├── .gitignore                      keeps personal agent settings and secrets out
 ├── .claude/
 │   ├── README.md                   why each setting and subagent is set up as it is
@@ -53,22 +60,24 @@ in correctly, and none of them is specific to one AI tool.
 │   └── agents/                     subagent definitions with their model tier
 │       ├── explorer.md             read-only search, cheapest tier
 │       ├── implementer.md          builds against a clear spec, middle tier
-│       └── reviewer.md             fresh-eyes review, most capable tier
+│       ├── reviewer.md             fresh-eyes review, most capable tier
+│       └── security.md             vulnerability triage, most capable tier
 ├── .github/
-│   └── pull_request_template.md    (GitLab: .gitlab/merge_request_templates/default.md)
+│   ├── README.md                   what each GitHub file does
+│   ├── pull_request_template.md
+│   ├── dependabot.yml              keeps dependencies and actions up to date
+│   └── workflows/
+│       ├── ci.yml                  install, lint, test, build, commit-message check
+│       ├── dependency-review.yml   blocks PRs that add vulnerable dependencies
+│       └── osv-scanner.yml         scans lockfiles on PRs and weekly
 └── docs/
     ├── README.md                   map of docs/
     ├── next-steps.md               what is open; where a new session starts
-    ├── adr/                        decisions made
-    │   ├── README.md               index and how to add one
-    │   ├── template.md
-    │   ├── ADR-0001-record-architecture-decisions.md
-    │   ├── ADR-0002-layered-commits-and-merge-commits.md
-    │   ├── ADR-0003-agents-md-is-the-canonical-agent-file.md
-    │   └── ADR-0004-agent-first-development-and-model-selection.md
-    ├── proposals/                  designs not yet decided
-    │   ├── README.md
-    │   └── _template.md
+    ├── glossary.md                 the one place terms are defined
+    ├── learning-path.md            for people who can code: reading order and exercises
+    ├── new-to-coding/              for complete beginners; deletable
+    ├── adr/                        decisions made: ADR-0001 to ADR-0008, index, template
+    ├── proposals/                  designs not yet decided, and accepted ones
     └── conventions/                how we do things, each citing its ADR
         ├── README.md
         └── commits.md
@@ -95,7 +104,7 @@ ADR-0001. The parts that matter most:
 - **For agents, settled is settled.** Agents do not reopen an accepted ADR; they propose a superseding
   one. This one rule does the most to stop agents second-guessing earlier sessions.
 
-The four starter ADRs record the decisions this scaffold makes. They start as `Proposed`: accepting
+The eight starter ADRs record the decisions this scaffold makes. They start as `Proposed`: accepting
 them (and adjusting what you disagree with) is the team's first act in the new repo.
 
 ## Layered commits
@@ -132,6 +141,34 @@ ADR-0002.
 
 The test for where something goes: *would a different AI tool need to know this?* If yes, `AGENTS.md`.
 If it only makes sense for Claude, `CLAUDE.md`.
+
+## Teaching
+
+The repo is also a place to learn (ADR-0005). Docs set the order and the vocabulary; agents explain
+in context and point back to the docs.
+
+- **People who can code** follow [`docs/learning-path.md`](docs/learning-path.md): a reading order
+  and three exercises.
+- **Complete beginners** start in [`docs/new-to-coding/`](docs/new-to-coding/): the basics, then a
+  first contribution, step by step.
+- **Terms** are defined once, in [`docs/glossary.md`](docs/glossary.md).
+- **Teaching mode**, defined in `AGENTS.md`, makes an agent explain what it did and why. Each learner
+  switches it on in their own git-ignored settings, so it never changes anyone else's agent.
+
+## Security
+
+Most code in a modern project is other people's packages, and new vulnerabilities (CVEs) in them
+are published daily. An AI model can't track them alone: its knowledge stops at its training date.
+So detection comes from tools that read live databases, and the agent's job is judgment (ADR-0006).
+
+| Piece | What it does |
+|---|---|
+| Dependabot | Alerts on vulnerable dependencies and opens upgrade PRs |
+| Dependency review | Fails a PR that adds a dependency with a known vulnerability |
+| OSV-Scanner | Scans lockfiles on PRs and weekly, catching CVEs published after a merge |
+| Secret scanning and push protection | Refuses a push containing a credential |
+| `security` subagent | Explains whether an alert matters here and drafts the fix; never dismisses an alert |
+| `SECURITY.md` | Tells outsiders how to report a vulnerability privately |
 
 ## Agents and subagents
 
@@ -187,8 +224,23 @@ branch or worktree. Agents that only read can share a checkout.
 
 1. Copy the scaffold into the new repo.
 2. Replace every `<placeholder>` (repo name, commands, scopes, deciders).
-3. Review the four starter ADRs together; adjust them, then set each to `Accepted` with today's date.
-4. Fill in the commands and routing table in `AGENTS.md` as the repo takes shape.
-5. Add ADR-0005 onward for your own early decisions: repo layout, what generated output is committed,
-   where canonical definitions live, test and CI expectations.
-6. Delete this file, or keep it as `docs/onboarding/starting-point.md` for the next team.
+3. Review the eight starter ADRs together; adjust them, then set each to `Accepted` with today's
+   date.
+4. Apply the GitHub repo settings the conventions depend on (ADR-0007):
+   - **General:** allow merge commits; turn off squash merging, so the layers survive (ADR-0002).
+   - **Branches:** protect `main` so changes arrive through PRs, with CI and dependency review as
+     required checks.
+   - **Security:** turn on Dependabot alerts and security updates, secret scanning, push protection,
+     and private vulnerability reporting.
+   - On a private repo, protecting `main` needs a paid plan, secret scanning and dependency review
+     need GitHub's paid security products, and private vulnerability reporting isn't available, so
+     give a contact in `SECURITY.md`. Without them, review is the safeguard. Once you have the
+     security products, set the repository variable `HAS_CODE_SECURITY` to `true`.
+5. Fill in the commands in `AGENTS.md` and `.github/workflows/ci.yml`, and the routing table, as the
+   repo takes shape. Once you have a package manager, enable it in `.github/dependabot.yml`.
+6. Fill in the placeholders in `SECURITY.md`.
+7. Add ADR-0009 onward for your own early decisions: repo layout, what generated output is
+   committed, where canonical definitions live, test expectations.
+8. Delete `docs/new-to-coding/` if your team doesn't need it, and its links in `README.md`,
+   `docs/README.md` and `docs/learning-path.md`.
+9. Delete this file, or keep it as `docs/onboarding/starting-point.md` for the next team.

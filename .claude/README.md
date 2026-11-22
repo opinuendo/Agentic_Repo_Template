@@ -12,7 +12,7 @@ JSON can't hold comments, so the reasoning for each rule is here.
 | Rule | Why |
 |---|---|
 | `ask` on `git push`, `git merge` | Pushing and merging are visible to others and harder to undo; `AGENTS.md` says agents ask first (ADR-0004) |
-| `ask` on `gh pr create` / `gh pr merge`, `glab mr create` / `glab mr merge` | The same rule for pull and merge requests, on GitHub and GitLab. Delete the pair you don't use |
+| `ask` on `gh pr create` / `gh pr merge` | The same rule for pull requests. GitHub is the only supported host (ADR-0007) |
 | `deny` reading `.env`, `.env.*`, `*.pem`, `*.key` | Secrets should never enter an agent's context, where they could end up in a log, a commit, or a request to another service |
 
 Nothing is in `allow`, so each teammate approves other commands as they come up. If the same safe
@@ -32,6 +32,7 @@ The model choice applies the tier policy in `AGENTS.md` (ADR-0004).
 | [`explorer`](agents/explorer.md) | Fast, `haiku` | Read, Grep, Glob | Searching needs no design judgment, so the cheapest tier does it at full quality. Read-only tools mean it can't change anything by mistake |
 | [`implementer`](agents/implementer.md) | Balanced, `sonnet` | All | Building against a decided spec is careful execution. It is told to stop and report when the spec is unclear, because guessing causes rework |
 | [`reviewer`](agents/reviewer.md) | Most capable, `opus` | Read, Grep, Glob, Bash | Reviews are never downgraded. It can run tests but is told not to edit, so the review stays independent of the fix |
+| [`security`](agents/security.md) | Most capable, `opus` | All | Judging whether a vulnerability matters here is high-stakes judgment (ADR-0006). It needs all tools to read alerts with `gh` and draft a fix, and is told never to dismiss an alert |
 
 The `model:` lines use aliases (`haiku`, `sonnet`, `opus`) rather than versioned model IDs, so a new
 model release needs no edit here.

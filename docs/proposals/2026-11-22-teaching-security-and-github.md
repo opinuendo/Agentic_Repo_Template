@@ -1,6 +1,6 @@
 # Teaching, dependency security, and GitHub as the only host
 
-- **Status:** Proposed
+- **Status:** Accepted by opinuendo on 2026-11-22; recorded by an agent at their request
 - **Date:** 2026-11-22
 - **Author:** opinuendo
 - **Audience:** anyone deciding whether to adopt this template, including readers new to software
