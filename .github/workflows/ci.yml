@@ -1,0 +1,72 @@
+# Runs the repo's checks on every pull request and every push to main (ADR-0008).
+# Beginners: a "workflow" is a script GitHub runs for you on its own machines. See docs/glossary.md.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Read-only access to the repo is all these checks need.
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Install, lint, test, build
+    runs-on: ubuntu-latest
+    env:
+      # The same commands as the Commands table in AGENTS.md. Change both together (ADR-0008).
+      # A command left empty is skipped with a warning, so a fresh copy of the template passes.
+      INSTALL_CMD: ""
+      LINT_CMD: ""
+      TEST_CMD: ""
+      BUILD_CMD: ""
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install
+        run: |
+          if [ -z "$INSTALL_CMD" ]; then echo "::warning title=Install skipped::Set INSTALL_CMD in .github/workflows/ci.yml"; else bash -c "$INSTALL_CMD"; fi
+      - name: Lint
+        run: |
+          if [ -z "$LINT_CMD" ]; then echo "::warning title=Lint skipped::Set LINT_CMD in .github/workflows/ci.yml"; else bash -c "$LINT_CMD"; fi
+      - name: Test
+        run: |
+          if [ -z "$TEST_CMD" ]; then echo "::warning title=Test skipped::Set TEST_CMD in .github/workflows/ci.yml"; else bash -c "$TEST_CMD"; fi
+      - name: Build
+        run: |
+          if [ -z "$BUILD_CMD" ]; then echo "::warning title=Build skipped::Set BUILD_CMD in .github/workflows/ci.yml"; else bash -c "$BUILD_CMD"; fi
+
+  commit-messages:
+    name: Commit messages
+    # Only pull requests have a range of new commits to check.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check Conventional Commits prefixes (ADR-0002)
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          # Merge commits are skipped: their "Merge pull request" messages are required by ADR-0002.
+          # 'Revert "..."' is allowed because GitHub's Revert button writes it.
+          pattern='^((feat|fix|docs|chore|refactor|test|perf|build|ci|style|revert)(\([a-z0-9._-]+\))?!?: .+|Revert ".+")'
+          bad=0
+          while IFS= read -r line; do
+            sha="${line%% *}"
+            subject="${line#* }"
+            if ! [[ "$subject" =~ $pattern ]]; then
+              echo "::error title=Commit message::$sha \"$subject\" needs a prefix such as feat(core): or docs: (see docs/conventions/commits.md)"
+              bad=1
+            fi
+          done < <(git log --no-merges --format='%h %s' "$BASE_SHA..$HEAD_SHA")
+          if [ "$bad" -eq 0 ]; then echo "All commit messages use Conventional Commits prefixes."; fi
+          exit "$bad"

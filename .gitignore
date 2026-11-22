@@ -1,0 +1,11 @@
+# Personal agent settings and notes stay out of the repo (ADR-0003)
+CLAUDE.local.md
+.claude/settings.local.json
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Add your stack's build output and caches below
