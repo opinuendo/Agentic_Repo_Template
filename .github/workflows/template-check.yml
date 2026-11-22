@@ -1,0 +1,43 @@
+# Template repo only: checks that creating a project from the template still works (ADR-0009).
+# Setup deletes this file from new projects.
+name: Template check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  cleanup:
+    name: Project setup leaves no template files
+    if: ${{ github.event.repository.is_template }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run the cleanup on a copy
+        run: |
+          cp -r . "$RUNNER_TEMP/project"
+          cd "$RUNNER_TEMP/project"
+          TEMPLATE_CLEANUP_TEST=1 bash template/cleanup.sh
+
+      - name: Check nothing template-only is left
+        working-directory: ${{ runner.temp }}/project
+        run: |
+          fail=0
+          [ ! -e template ] || { echo "::error::template/ still exists"; fail=1; }
+          [ ! -e .github/workflows/template-check.yml ] || { echo "::error::template-check.yml still exists"; fail=1; }
+          head -1 README.md | grep -q '<repo-name>' || { echo "::error::README.md is not the project README"; fail=1; }
+          if grep -rn --exclude-dir=.git '2026-11-22-teaching-security' . ; then
+            echo "::error::references to template-only files remain (listed above)"; fail=1
+          fi
+          exit "$fail"
+
+      - name: Check links in the new project
+        working-directory: ${{ runner.temp }}/project
+        run: python3 "$GITHUB_WORKSPACE/.github/scripts/check-links.py"
