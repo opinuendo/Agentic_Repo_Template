@@ -49,9 +49,11 @@ in correctly, and none of them is specific to one AI tool.
 .
 ├── AGENTS.md                       the main agent file: how we work, commands, routing, rules
 ├── CLAUDE.md                       imports AGENTS.md; Claude-specific notes only
-├── README.md                       what the repo is, for people
+├── README.md                       what the repo is, for people (in the template: the template)
+├── LICENSE
 ├── CONTRIBUTING.md                 the git rules for contributors, in brief
 ├── SECURITY.md                     how to report a vulnerability privately
+├── template/                       template only: cleanup script and the project README
 ├── .editorconfig                   shared editor settings: encoding, line endings, indentation
 ├── .gitignore                      keeps personal agent settings and secrets out
 ├── .claude/
@@ -69,14 +71,15 @@ in correctly, and none of them is specific to one AI tool.
 │   └── workflows/
 │       ├── ci.yml                  install, lint, test, build, commit-message check
 │       ├── dependency-review.yml   blocks PRs that add vulnerable dependencies
-│       └── osv-scanner.yml         scans lockfiles on PRs and weekly
+│       ├── osv-scanner.yml         scans lockfiles on PRs and weekly
+│       └── template-check.yml      template only: setup still works
 └── docs/
     ├── README.md                   map of docs/
     ├── next-steps.md               what is open; where a new session starts
     ├── glossary.md                 the one place terms are defined
     ├── learning-path.md            for people who can code: reading order and exercises
     ├── new-to-coding/              for complete beginners; deletable
-    ├── adr/                        decisions made: ADR-0001 to ADR-0008, index, template
+    ├── adr/                        decisions made: ADR-0001 to ADR-0009, index, template
     ├── proposals/                  designs not yet decided, and accepted ones
     └── conventions/                how we do things, each citing its ADR
         ├── README.md
@@ -104,7 +107,7 @@ ADR-0001. The parts that matter most:
 - **For agents, settled is settled.** Agents do not reopen an accepted ADR; they propose a superseding
   one. This one rule does the most to stop agents second-guessing earlier sessions.
 
-The eight starter ADRs record the decisions this scaffold makes. They start as `Proposed`: accepting
+The nine starter ADRs record the decisions this scaffold makes. They start as `Proposed`: accepting
 them (and adjusting what you disagree with) is the team's first act in the new repo.
 
 ## Layered commits
@@ -220,27 +223,67 @@ branch or worktree. Agents that only read can share a checkout.
   read the diff.
 - What was not done or not verified is said plainly in the PR description.
 
-## Adopting this scaffold
+## Setting up a new project
 
-1. Copy the scaffold into the new repo.
-2. Replace every `<placeholder>` (repo name, commands, scopes, deciders).
-3. Review the eight starter ADRs together; adjust them, then set each to `Accepted` with today's
-   date.
-4. Apply the GitHub repo settings the conventions depend on (ADR-0007):
-   - **General:** allow merge commits; turn off squash merging, so the layers survive (ADR-0002).
-   - **Branches:** protect `main` so changes arrive through PRs, with CI and dependency review as
-     required checks.
-   - **Security:** turn on Dependabot alerts and security updates, secret scanning, push protection,
-     and private vulnerability reporting.
-   - On a private repo, protecting `main` needs a paid plan, secret scanning and dependency review
-     need GitHub's paid security products, and private vulnerability reporting isn't available, so
-     give a contact in `SECURITY.md`. Without them, review is the safeguard. Once you have the
-     security products, set the repository variable `HAS_CODE_SECURITY` to `true`.
-5. Fill in the commands in `AGENTS.md` and `.github/workflows/ci.yml`, and the routing table, as the
-   repo takes shape. Once you have a package manager, enable it in `.github/dependabot.yml`.
-6. Fill in the placeholders in `SECURITY.md`.
-7. Add ADR-0009 onward for your own early decisions: repo layout, what generated output is
-   committed, where canonical definitions live, test expectations.
-8. Delete `docs/new-to-coding/` if your team doesn't need it, and its links in `README.md`,
-   `docs/README.md` and `docs/learning-path.md`.
-9. Delete this file, or keep it as `docs/onboarding/starting-point.md` for the next team.
+This is done once, when a project is created. Create the project from the template first: **Use this template** on GitHub, or
+`gh repo create <name> --template opinuendo/Agentic_Repo_Template --clone`. Then, in the new repo, ask
+your agent to follow this section, or follow it yourself (ADR-0009).
+
+**1. Ask the person.** Only they can answer these; don't guess.
+
+- The project's name, and one or two sentences on what it is and who it's for.
+- Its language and package manager, and the install, test, lint, format and build commands. "Not
+  decided yet" is a fine answer: leave those placeholders.
+- Who holds the copyright, and whether to keep the MIT license.
+- Who decides: the names that go in each ADR's Deciders line.
+- Whether to keep `docs/new-to-coding/` (keep it if anyone on the team is new to coding).
+- Whether the repo is public or private, which changes the GitHub settings in step 5.
+
+**2. Remove the template-only files.** On a new branch, `chore/setup-from-template`, run
+`bash template/cleanup.sh`. It swaps in the project README, removes the template's own proposal, the
+template-only CI check and the `template/` folder, and resets the license holder. It lists the
+placeholders left to fill in. Don't commit yet.
+
+**3. Fill in the placeholders** from the answers in step 1:
+
+- the project name and description in `README.md` and `AGENTS.md`; the commands table, scopes and
+  routing table in `AGENTS.md`; the repo URL in `docs/new-to-coding/first-contribution.md`;
+  `SECURITY.md`; the copyright line in `LICENSE`. Remove the "Skills and hooks" placeholder in
+  `CLAUDE.md` if unused.
+- the Deciders lines in the ADRs.
+- the same commands in `.github/workflows/ci.yml`, and the package manager in
+  `.github/dependabot.yml`, if decided.
+- If not keeping `docs/new-to-coding/`, delete it and every link to it (search for
+  `new-to-coding`).
+
+Run `python3 .github/scripts/check-links.py` and the test and lint commands, then commit in layers
+(ADR-0002):
+
+1. `docs(adr): set deciders for the starter ADRs`: everything under `docs/adr/`.
+2. `docs: set up project docs from the template`: the other Markdown files and `LICENSE`.
+3. `chore: remove template-only files and set CI commands`: the rest, including the deleted
+   `template/` folder and workflow.
+
+**4. Push and open a pull request**, after asking the person (ADR-0004).
+
+**5. Apply the GitHub settings.** A person does this; GitHub doesn't copy settings from a template
+(ADR-0007).
+
+- **General:** allow merge commits; turn off squash merging, so the layers survive (ADR-0002).
+- **Advanced Security** (may be labeled "Code security"): turn on the dependency graph, Dependabot
+  alerts, Dependabot security updates, secret scanning, push protection, and private vulnerability
+  reporting.
+- **Branches:** protect `main` so changes arrive through PRs, with CI and dependency review as
+  required checks.
+- On a private repo, protecting `main` needs a paid plan, secret scanning and dependency review
+  need GitHub's paid security products, and private vulnerability reporting isn't available, so give
+  a contact in `SECURITY.md`. Without them, review is the safeguard. Once you have the security
+  products, set the repository variable `HAS_CODE_SECURITY` to `true`.
+
+**6. Accept the starter ADRs.** A person does this; an agent never sets `Accepted` (ADR-0001).
+Review ADR-0001 to ADR-0009 together, adjust what you disagree with, and set each to `Accepted`
+with the date. Record your own early decisions from ADR-0010 onward: repo
+layout, what generated output is committed, where canonical definitions live, test expectations.
+
+**7. Keep `docs/next-steps.md` current** from here on. Delete this file once the starter ADRs are
+accepted, or move it to `docs/onboarding/` for the next newcomer.

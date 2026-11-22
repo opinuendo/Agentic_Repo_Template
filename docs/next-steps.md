@@ -14,11 +14,11 @@ step gets skipped.
 
 ## Up next
 
-- [ ] Review and accept the starter ADRs (ADR-0001 to ADR-0008)
-- [ ] Apply the GitHub repo settings listed in `STARTING_POINT.md` (ADR-0007)
+- [ ] Review and accept the starter ADRs (ADR-0001 to ADR-0009)
+- [ ] Apply the GitHub repo settings in `STARTING_POINT.md`, "Setting up a new project" (ADR-0007)
 - [ ] Fill in the commands in `AGENTS.md` and `.github/workflows/ci.yml`, and the routing table
 - [ ] Once the repo has a package manager, enable it in `.github/dependabot.yml` (ADR-0006)
-- [ ] Record early decisions as ADR-0009 onward: repo layout, what generated output is committed,
+- [ ] Record early decisions as ADR-0010 onward: repo layout, what generated output is committed,
       where canonical definitions live, test expectations
 
 ## Blocked or waiting
