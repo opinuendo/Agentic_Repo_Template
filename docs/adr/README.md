@@ -9,8 +9,12 @@ See [`template.md`](template.md) for the format and ADR-0001 for why this exists
 | [0002](ADR-0002-layered-commits-and-merge-commits.md) | Layered commits, Conventional Commits, merge commits | Proposed |
 | [0003](ADR-0003-agents-md-is-the-canonical-agent-file.md) | `AGENTS.md` is the canonical agent file; tool files point to it | Proposed |
 | [0004](ADR-0004-agent-first-development-and-model-selection.md) | Agent-first development; least expensive model that keeps full quality | Proposed |
+| [0005](ADR-0005-the-template-teaches.md) | The template teaches its practices, and the basics to beginners | Proposed |
+| [0006](ADR-0006-dependency-security.md) | Tools detect vulnerable dependencies; an agent triages; people decide | Proposed |
+| [0007](ADR-0007-github-is-the-only-supported-host.md) | GitHub is the only supported host | Proposed |
+| [0008](ADR-0008-baseline-project-hygiene.md) | Baseline hygiene: CONTRIBUTING, CI, commit check, editorconfig | Proposed |
 
-The four starter ADRs come from the agentic repo starter. Review them as a team, adjust what you
+The eight starter ADRs come from the agentic repo starter. Review them as a team, adjust what you
 disagree with, then set each to `Accepted` with the date.
 
 ## Adding a new ADR
