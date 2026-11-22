@@ -24,4 +24,4 @@ accepted (ADR-0001).
 
 | Proposal | Status | Summary |
 |---|---|---|
-| | | |
+| *None yet* | | |
