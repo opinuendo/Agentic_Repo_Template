@@ -13,8 +13,9 @@ See [`template.md`](template.md) for the format and ADR-0001 for why this exists
 | [0006](ADR-0006-dependency-security.md) | Tools detect vulnerable dependencies; an agent triages; people decide | Proposed |
 | [0007](ADR-0007-github-is-the-only-supported-host.md) | GitHub is the only supported host | Proposed |
 | [0008](ADR-0008-baseline-project-hygiene.md) | Baseline hygiene: CONTRIBUTING, CI, commit check, editorconfig | Proposed |
+| [0009](ADR-0009-new-projects-start-from-the-template-with-one-prompt-setup.md) | New projects start from the GitHub template, set up with one prompt | Proposed |
 
-The eight starter ADRs come from the agentic repo starter. Review them as a team, adjust what you
+The nine starter ADRs come from the agentic repo starter. Review them as a team, adjust what you
 disagree with, then set each to `Accepted` with the date.
 
 ## Adding a new ADR

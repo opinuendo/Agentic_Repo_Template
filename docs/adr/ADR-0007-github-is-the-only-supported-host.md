@@ -14,12 +14,12 @@ configured to support them.
 ## Decision
 
 Support GitHub only. Remove the GitLab rules and paths, and list the repo settings the conventions
-depend on in `STARTING_POINT.md`'s adoption steps:
+depend on in `STARTING_POINT.md`'s setup steps:
 
 - Allow merge commits and turn off squash merging, so the layers survive (ADR-0002).
 - Protect `main`: changes arrive through PRs, with CI and dependency review as required checks.
-- Turn on Dependabot alerts and security updates, secret scanning, push protection, and private
-  vulnerability reporting (ADR-0006).
+- Turn on the dependency graph, Dependabot alerts and security updates, secret scanning, push
+  protection, and private vulnerability reporting (ADR-0006).
 
 On private repos, protecting `main` needs a paid GitHub plan, secret scanning and dependency review
 need GitHub's paid security products, and private vulnerability reporting isn't available (so
