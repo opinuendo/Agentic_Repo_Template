@@ -24,4 +24,4 @@ accepted (ADR-0001).
 
 | Proposal | Status | Summary |
 |---|---|---|
-| *None yet* | | |
+| [2026-11-22 teaching, security and GitHub](2026-11-22-teaching-security-and-github.md) | Proposed | Teach practices and coding basics, detect vulnerable dependencies, target GitHub only |
