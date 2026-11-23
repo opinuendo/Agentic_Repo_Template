@@ -30,7 +30,8 @@ decides.
 - **The `security` subagent** (most capable tier, ADR-0004) reads open alerts with `gh`, judges whether
   the vulnerable code is used here, explains the risk in plain words, and drafts a fix on a branch as
   a `fix(deps):` commit. It never dismisses an alert, asks before pushing like any agent, and trusts
-  the alert databases over its own memory. These rules are in `AGENTS.md`.
+  the alert databases over its own memory. The rules that must never be missed are in `AGENTS.md`;
+  the detail is in `AGENTS_security.md` (ADR-0003).
 
 Third-party actions are pinned to a full commit SHA with the version in a comment, and Dependabot
 updates the pins. A tag can be moved to point at different code; a commit SHA can't.

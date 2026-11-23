@@ -18,7 +18,7 @@ Look up any unfamiliar term in the [glossary](glossary.md).
 ## Practice
 
 Each exercise happens on a throwaway branch that you delete afterwards, so nothing reaches `main`.
-Turn on teaching mode first (see [`AGENTS.md`](../AGENTS.md)) if you'd like your agent to explain
+Turn on teaching mode first (see [`AGENTS_teaching.md`](../AGENTS_teaching.md)) if you'd like your agent to explain
 as you go.
 
 ### 1. Write a practice ADR

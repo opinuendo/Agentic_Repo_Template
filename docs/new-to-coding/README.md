@@ -22,7 +22,7 @@ Keep the [glossary](../glossary.md) open in another tab. Every term in bold in t
 AI agents are patient tutors: you can ask the same question five times. Two tips:
 
 - **Turn on teaching mode** so your agent explains what it does and why, and links you to the doc
-  that covers it. How to turn it on is in [`AGENTS.md`](../../AGENTS.md#teaching-mode).
+  that covers it. How to turn it on is in [`AGENTS_teaching.md`](../../AGENTS_teaching.md#turning-it-on).
 - **Ask "why", not just "how".** "Why does this repo use merge commits?" leads to ADR-0002, where the
   real answer lives. Agents can be confidently wrong; when an agent and a doc disagree, ask a person.
 
