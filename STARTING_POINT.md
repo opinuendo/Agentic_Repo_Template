@@ -48,6 +48,7 @@ in correctly, and none of them is specific to one AI tool.
 ```text
 .
 ├── AGENTS.md                       the main agent file: how we work, commands, routing, rules
+├── AGENTS_<topic>.md              specialty detail for agents, e.g. security, teaching
 ├── CLAUDE.md                       imports AGENTS.md; Claude-specific notes only
 ├── README.md                       what the repo is, for people (in the template: the template)
 ├── LICENSE
@@ -139,6 +140,9 @@ ADR-0002.
   that tool's specifics.
 - **Keep `AGENTS.md` short.** It is loaded at the start of every session, so every line costs on every
   task. Aim for under about 150 lines. Detail goes in linked docs, reached through the routing table.
+- **Specialty detail goes in `AGENTS_<topic>.md`** at the repo root, listed in the Agent files table
+  in `AGENTS.md`. Rules that must never be missed stay in `AGENTS.md`, because tools load only that
+  file automatically. CI checks the table matches the files.
 - **Nested `AGENTS.md` files** are fine in large subdirectories with rules of their own; keep them
   just as short.
 
@@ -155,7 +159,7 @@ in context and point back to the docs.
 - **Complete beginners** start in [`docs/new-to-coding/`](docs/new-to-coding/): the basics, then a
   first contribution, step by step.
 - **Terms** are defined once, in [`docs/glossary.md`](docs/glossary.md).
-- **Teaching mode**, defined in `AGENTS.md`, makes an agent explain what it did and why. Each learner
+- **Teaching mode**, defined in `AGENTS_teaching.md`, makes an agent explain what it did and why. Each learner
   switches it on in their own git-ignored settings, so it never changes anyone else's agent.
 
 ## Security
@@ -173,27 +177,23 @@ So detection comes from tools that read live databases, and the agent's job is j
 | `security` subagent | Explains whether an alert matters here and drafts the fix; never dismisses an alert |
 | `SECURITY.md` | Tells outsiders how to report a vulnerability privately |
 
+## Working with the author
+
+Agents recommend and the author decides (ADR-0004). For any architectural or hard-to-reverse
+choice, an agent lays out
+the options with their pros and cons and its recommendation, then asks, one question at a time. A
+question from the author is a check on the reasoning, not pushback: the agent keeps a sound
+recommendation and explains why. The author can grant more autonomy explicitly, for a named scope.
+
 ## Agents and subagents
 
 The main agent orchestrates: it holds the task, makes the judgment calls, delegates bounded work to
 subagents, and verifies what comes back. Subagents do work that is independent, parallel, or would
 flood the main agent's context (wide searches, isolated implementation steps, fresh-eyes review).
 
-**Choosing a model** (the full policy is ADR-0004):
-
-| Tier | Use it for | Examples |
-|---|---|---|
-| Fast, least expensive | Reading and finding, with no judgment about the result | Search the codebase, list call sites, summarize a file, check a link |
-| Balanced | Building against a clear, complete spec | Implement a function whose interface is decided, write tests for a known behavior, fill in docs from an outline |
-| Most capable | Judgment, ambiguity, or high stakes | Design, ADRs, debugging with no clear cause, code review, security- or data-sensitive changes |
-
-- Pick the least expensive tier that will do the task **at full quality**. When unsure, go one tier up.
-- Rework counts as cost. Escalate a tier after one failed attempt rather than retrying the same tier.
-- Reviews are never downgraded to save cost.
-- The main agent checks a subagent's result before relying on it. A subagent's report is a claim, not
-  proof.
-- Policies name tiers, not model IDs: model names change; the tiers don't. The Claude mapping lives in
-  `.claude/agents/`.
+**Choosing a model.** Use the least expensive tier that does the task at full quality, and never
+downgrade a review. The tier table, escalation rule and delegation detail are in
+[`AGENTS_delegation.md`](AGENTS_delegation.md); the policy is ADR-0004.
 
 **Working in parallel.** One writer per set of files. Parallel agents that write code each get their own
 branch or worktree. Agents that only read can share a checkout.
@@ -229,7 +229,8 @@ This is done once, when a project is created. Create the project from the templa
 `gh repo create <name> --template opinuendo/Agentic_Repo_Template --clone`. Then, in the new repo, ask
 your agent to follow this section, or follow it yourself (ADR-0009).
 
-**1. Ask the person.** Only they can answer these; don't guess.
+**1. Ask the person, one question at a time.** Only they can answer these; don't guess. Offer
+options with your recommendation first, so each takes a one-word reply (`AGENTS_collaboration.md`).
 
 - The project's name, and one or two sentences on what it is and who it's for.
 - Its language and package manager, and the install, test, lint, format and build commands. "Not

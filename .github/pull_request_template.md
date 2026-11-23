@@ -25,5 +25,5 @@ exists: agents tend to report work as finished, and a reviewer can only check wh
 - [ ] READMEs, conventions, and `docs/next-steps.md` match the change, so the next session starts
       from the truth
 - [ ] Substantial changes had a fresh-context review (the `reviewer` subagent or a person), because
-      the author is the worst judge of their own blind spots
+      whoever wrote a change is the worst judge of its blind spots
 - [ ] No credentials, personal data, or local settings files added

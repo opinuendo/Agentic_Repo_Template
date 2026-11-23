@@ -41,6 +41,8 @@ jobs:
           if [ -z "$BUILD_CMD" ]; then echo "::warning title=Build skipped::Set BUILD_CMD in .github/workflows/ci.yml"; else bash -c "$BUILD_CMD"; fi
       - name: Check Markdown links
         run: python3 .github/scripts/check-links.py
+      - name: Check agent files match the table in AGENTS.md (ADR-0003)
+        run: python3 .github/scripts/check-agent-files.py
 
   commit-messages:
     name: Commit messages

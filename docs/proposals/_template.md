@@ -2,7 +2,7 @@
 
 - **Status:** Proposed
 - **Date:** YYYY-MM-DD
-- **Author:** <name>
+- **Written by:** <name>
 - **Audience:** <who needs to read and decide>
 
 <!-- Audience matters because proposals travel outside the repo. Write for that reader: someone who

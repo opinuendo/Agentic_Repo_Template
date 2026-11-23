@@ -11,7 +11,7 @@ the ADR it cites.
 
 - **Agent-first (ADR-0004).** Agents write as much of the code as possible. People decide, review, and
   accept. Write everything so an agent with no memory of earlier sessions can pick up the task,
-  because every session starts from nothing.
+  because every session starts from nothing. See [Working with the author](#working-with-the-author).
 - **Quality is never traded for cost (ADR-0004).** Use the least expensive model that does the task at
   full quality; a cheap model that causes rework isn't cheap. See
   [Agents and subagents](#agents-and-subagents).
@@ -23,8 +23,9 @@ the ADR it cites.
   next reader is often an agent with no context, and a README tells it what belongs in a folder before
   it adds something that doesn't. When something here confused you, fix the doc, not just the code.
 - **The repo teaches (ADR-0005).** Terms are defined once, in [`docs/glossary.md`](docs/glossary.md).
-  Learners can switch on [teaching mode](#teaching-mode).
+  If your personal instructions turn on teaching mode, load `AGENTS_teaching.md`.
 - **Tools detect vulnerabilities; agents triage; people decide (ADR-0006).** See [Security](#security).
+- **Specialty detail lives in topic files (ADR-0003).** See [Agent files](#agent-files).
 
 ## Commands
 
@@ -43,7 +44,8 @@ work gets reported as finished when it isn't. CI runs the same commands, set in
 ## Routing
 
 This file is loaded at the start of every session, so it stays short and detail lives in the files
-below, read only when a task needs them.
+below, read only when a task needs them. Agent rules for a specialty are in the
+[Agent files](#agent-files) table instead.
 
 | Task | Load |
 |---|---|
@@ -52,8 +54,6 @@ below, read only when a task needs them.
 | Recording a decision | [`docs/adr/README.md`](docs/adr/README.md), [`docs/adr/template.md`](docs/adr/template.md) |
 | A design not yet decided | [`docs/proposals/README.md`](docs/proposals/README.md) |
 | Committing, branching, opening a PR | [`docs/conventions/commits.md`](docs/conventions/commits.md) |
-| A security alert, failed security check, or CVE question | [Security](#security), [`SECURITY.md`](SECURITY.md), ADR-0006 |
-| Explaining or defining a term; helping a learner | [`docs/glossary.md`](docs/glossary.md), [`docs/learning-path.md`](docs/learning-path.md), [`docs/new-to-coding/`](docs/new-to-coding/) |
 | <your task type> | <the files to read for it> |
 
 ## Rules that are easy to get wrong
@@ -93,36 +93,50 @@ below, read only when a task needs them.
 
 ## Security
 
-- Detection comes from tools reading live databases: Dependabot, dependency review and OSV-Scanner
-  (ADR-0006). Your knowledge stops at your training date, so never judge whether a package is
-  vulnerable from memory.
-- Triage with the most capable tier: check whether this repo uses the vulnerable code, explain the
-  risk in plain words, and draft the fix on a branch as a `fix(deps):` commit.
+The detail is in `AGENTS_security.md`. These rules apply everywhere (ADR-0006):
+
+- Never judge whether a package is vulnerable from memory. Your knowledge stops at your training
+  date; the alert databases are the source of truth.
 - Never dismiss an alert, change its state, or lower its severity. Explain why you think it doesn't
   apply, and a person dismisses it.
-- Say why each new dependency is needed: it is code you didn't write and must keep patched.
+- Say why each new dependency is needed: it's code you didn't write and must keep patched.
+
+## Agent files
+
+Specialty detail goes in `AGENTS_<topic>.md` files at the repo root, so this file stays short
+(ADR-0003). Tools load only this file automatically, so a rule that must never be missed stays here,
+not in a topic file. This table is the complete list, and CI checks that it matches the files.
+Rules for one folder go in a short `AGENTS.md` inside that folder instead.
+
+| File | Load it when |
+|---|---|
+| [`AGENTS_collaboration.md`](AGENTS_collaboration.md) | Presenting a decision, asking the author questions, answering a challenge, or working under a grant of autonomy |
+| [`AGENTS_delegation.md`](AGENTS_delegation.md) | Delegating to a subagent or choosing a model tier |
+| [`AGENTS_security.md`](AGENTS_security.md) | Working on a security alert, a failed security check, a CVE question, or a new dependency |
+| [`AGENTS_teaching.md`](AGENTS_teaching.md) | Teaching mode is on, or someone is learning |
+
+## Working with the author
+
+The author is the person directing the work (ADR-0004); examples are in `AGENTS_collaboration.md`.
+
+- **Recommend; the author decides.** For an architectural or hard-to-reverse choice (structure,
+  stack, data model, public interfaces; when unsure, treat it as one), give the options with their
+  pros and cons and your recommendation, then let the author choose. Never build on an assumed
+  answer. An explicit grant of autonomy for a named scope lets you decide within it; record each
+  architectural decision as a `Proposed` ADR. A grant covers decisions only, never the "Ask first"
+  or "Never" rows of [What agents may do](#what-agents-may-do).
+- **One question at a time.** Ask the one that unblocks the most, make it easy to answer, and wait.
+- **A question is a check, not pushback.** Re-check your reasoning and show it. Keep a recommendation
+  that still holds; change it only when the reasoning breaks, and say what was wrong.
 
 ## Agents and subagents
 
-The main agent orchestrates: it keeps the judgment calls, delegates bounded work, and checks what comes
-back before relying on it, because a subagent's report is a claim, not proof. Delegate work that is
-independent, parallel, or would flood your context.
+The main agent keeps the judgment calls, delegates bounded work, and checks what comes back before
+relying on it: a subagent's report is a claim, not proof. Detail is in `AGENTS_delegation.md`.
 
-| Tier | Use it for | Why this tier |
-|---|---|---|
-| Fast, least expensive | Finding and reading: search, list call sites, summarize a file | No judgment needed; a stronger model adds cost, not quality |
-| Balanced | Building against a clear, complete spec: implement a decided interface, write tests for known behavior | The thinking is done; the work is careful execution |
-| Most capable | Judgment or high stakes: design, ADRs, unclear bugs, code review, security- or data-sensitive changes | Mistakes here are expensive and easy to miss |
-
-- When unsure, go one tier up. Picking too low costs more in rework than picking too high costs in
-  tokens.
-- After one failed attempt, escalate a tier rather than retrying the same one; the same model on the
-  same problem usually gets the same result.
-- Reviews are never downgraded to save cost. A review exists to catch what the author missed.
-- One writer per set of files. Parallel writers each get their own branch or worktree, or they
-  overwrite each other.
-- Give a subagent the goal, what is already ruled out, the files to read, and what done looks like.
-  It knows only what you tell it.
+- Use the least expensive model tier that does the task at full quality; when unsure, go one up.
+  After one failed attempt, escalate a tier rather than retrying the same one.
+- Never downgrade a review to save cost, and keep one writer per set of files.
 
 ## Definition of done
 
@@ -133,19 +147,6 @@ Agents tend to report work as finished. These make "done" something you can chec
 - READMEs, conventions, and [`docs/next-steps.md`](docs/next-steps.md) match the change, so the next
   session starts from the truth.
 - A convention change has an ADR, as the first commit.
-- Substantial changes had a fresh-context review; the author is the worst judge of their own blind
-  spots.
+- Substantial changes had a fresh-context review; whoever wrote a change is the worst judge of its
+  blind spots.
 - What was not done or not verified is stated plainly.
-
-## Teaching mode
-
-Off by default (ADR-0005). A learner switches it on with a line saying "Use teaching mode from
-AGENTS.md" in their own tool's personal, git-ignored instructions (for Claude, see `CLAUDE.md`).
-When it is on:
-
-- Before acting, say in a sentence what you are about to do and why.
-- After acting, explain what changed in plain words, and link the glossary entry, ADR or doc that
-  covers it.
-- Show the command you ran and what it did, so the learner can run it themselves next time.
-- Never simplify the code itself to make it easier to explain. The code meets the same bar either
-  way.

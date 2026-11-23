@@ -25,7 +25,7 @@ means one person's preferences never change another person's agent.
 ## `agents/`
 
 Each file defines a subagent: what it is for, which tools it may use, and which model it runs on.
-The model choice applies the tier policy in `AGENTS.md` (ADR-0004).
+The model choice applies the tier policy in `AGENTS_delegation.md` (ADR-0004).
 
 | Subagent | Tier and model | Tools | Why it is set up this way |
 |---|---|---|---|
