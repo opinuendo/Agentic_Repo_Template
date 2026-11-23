@@ -33,6 +33,7 @@ jobs:
           [ ! -e template ] || { echo "::error::template/ still exists"; fail=1; }
           [ ! -e .github/workflows/template-check.yml ] || { echo "::error::template-check.yml still exists"; fail=1; }
           head -1 README.md | grep -q '<repo-name>' || { echo "::error::README.md is not the project README"; fail=1; }
+          grep -q 'created from the Agentic Repo Template' docs/next-steps.md || { echo "::error::docs/next-steps.md has no creation entry"; fail=1; }
           if grep -rn --exclude-dir=.git '2026-11-22-teaching-security' . ; then
             echo "::error::references to template-only files remain (listed above)"; fail=1
           fi

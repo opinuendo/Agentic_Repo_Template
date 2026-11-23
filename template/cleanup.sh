@@ -44,10 +44,14 @@ echo "Removing template-only lines from STARTING_POINT.md..."
 perl -ni -e 'print unless /template only:/' STARTING_POINT.md
 perl -pi -e 's/├── osv-scanner\.yml/└── osv-scanner.yml/' STARTING_POINT.md
 
+echo "Recording the project's creation in docs/next-steps.md..."
+today=$(date +%Y-%m-%d)
+perl -pi -e "s/^- <YYYY-MM-DD: decision, with its ADR number>\$/- $today: created from the Agentic Repo Template; starter ADRs ADR-0001 to ADR-0009 await acceptance (ADR-0009)/" docs/next-steps.md
+
 echo "Removing template/..."
 rm -rf template
 
 echo
 echo "Done. Placeholders still to fill in:"
-grep -rniE '<(repo-name|one or two sentences|install command|test command|lint command|format command|build command|your |the files to read|this repo.s url|list project skills|year|copyright holder|number|maintainer|names|which versions)' \
+grep -rniE '<(repo-name|one or two sentences|install command|test command|lint command|format command|build command|your |the files to read|add the few rules|this repo.s url|list project skills|year|copyright holder|number|maintainer|names|which versions)' \
   --include='*.md' --include='*.yml' --include=LICENSE . 2>/dev/null | grep -v -e '^./.git/' -e '^./STARTING_POINT.md' || echo "  none found"
