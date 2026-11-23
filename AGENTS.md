@@ -11,7 +11,7 @@ the ADR it cites.
 
 - **Agent-first (ADR-0004).** Agents write as much of the code as possible. People decide, review, and
   accept. Write everything so an agent with no memory of earlier sessions can pick up the task,
-  because every session starts from nothing.
+  because every session starts from nothing. See [Working with the author](#working-with-the-author).
 - **Quality is never traded for cost (ADR-0004).** Use the least expensive model that does the task at
   full quality; a cheap model that causes rework isn't cheap. See
   [Agents and subagents](#agents-and-subagents).
@@ -106,35 +106,37 @@ The detail is in `AGENTS_security.md`. These rules apply everywhere (ADR-0006):
 Specialty detail goes in `AGENTS_<topic>.md` files at the repo root, so this file stays short
 (ADR-0003). Tools load only this file automatically, so a rule that must never be missed stays here,
 not in a topic file. This table is the complete list, and CI checks that it matches the files.
+Rules for one folder go in a short `AGENTS.md` inside that folder instead.
 
 | File | Load it when |
 |---|---|
+| [`AGENTS_collaboration.md`](AGENTS_collaboration.md) | Presenting a decision, asking the author questions, answering a challenge, or working under a grant of autonomy |
+| [`AGENTS_delegation.md`](AGENTS_delegation.md) | Delegating to a subagent or choosing a model tier |
 | [`AGENTS_security.md`](AGENTS_security.md) | Working on a security alert, a failed security check, a CVE question, or a new dependency |
 | [`AGENTS_teaching.md`](AGENTS_teaching.md) | Teaching mode is on, or someone is learning |
 
-Rules for one folder go in a short `AGENTS.md` inside that folder instead.
+## Working with the author
+
+The author is the person directing the work (ADR-0004); examples are in `AGENTS_collaboration.md`.
+
+- **Recommend; the author decides.** For an architectural or hard-to-reverse choice (structure,
+  stack, data model, public interfaces; when unsure, treat it as one), give the options with their
+  pros and cons and your recommendation, then let the author choose. Never build on an assumed
+  answer. An explicit grant of autonomy for a named scope lets you decide within it; record each
+  architectural decision as a `Proposed` ADR. A grant covers decisions only, never the "Ask first"
+  or "Never" rows of [What agents may do](#what-agents-may-do).
+- **One question at a time.** Ask the one that unblocks the most, make it easy to answer, and wait.
+- **A question is a check, not pushback.** Re-check your reasoning and show it. Keep a recommendation
+  that still holds; change it only when the reasoning breaks, and say what was wrong.
 
 ## Agents and subagents
 
-The main agent orchestrates: it keeps the judgment calls, delegates bounded work, and checks what comes
-back before relying on it, because a subagent's report is a claim, not proof. Delegate work that is
-independent, parallel, or would flood your context.
+The main agent keeps the judgment calls, delegates bounded work, and checks what comes back before
+relying on it: a subagent's report is a claim, not proof. Detail is in `AGENTS_delegation.md`.
 
-| Tier | Use it for | Why this tier |
-|---|---|---|
-| Fast, least expensive | Finding and reading: search, list call sites, summarize a file | No judgment needed; a stronger model adds cost, not quality |
-| Balanced | Building against a clear, complete spec: implement a decided interface, write tests for known behavior | The thinking is done; the work is careful execution |
-| Most capable | Judgment or high stakes: design, ADRs, unclear bugs, code review, security- or data-sensitive changes | Mistakes here are expensive and easy to miss |
-
-- When unsure, go one tier up. Picking too low costs more in rework than picking too high costs in
-  tokens.
-- After one failed attempt, escalate a tier rather than retrying the same one; the same model on the
-  same problem usually gets the same result.
-- Reviews are never downgraded to save cost. A review exists to catch what the author missed.
-- One writer per set of files. Parallel writers each get their own branch or worktree, or they
-  overwrite each other.
-- Give a subagent the goal, what is already ruled out, the files to read, and what done looks like.
-  It knows only what you tell it.
+- Use the least expensive model tier that does the task at full quality; when unsure, go one up.
+  After one failed attempt, escalate a tier rather than retrying the same one.
+- Never downgrade a review to save cost, and keep one writer per set of files.
 
 ## Definition of done
 
@@ -145,6 +147,6 @@ Agents tend to report work as finished. These make "done" something you can chec
 - READMEs, conventions, and [`docs/next-steps.md`](docs/next-steps.md) match the change, so the next
   session starts from the truth.
 - A convention change has an ADR, as the first commit.
-- Substantial changes had a fresh-context review; the author is the worst judge of their own blind
-  spots.
+- Substantial changes had a fresh-context review; whoever wrote a change is the worst judge of its
+  blind spots.
 - What was not done or not verified is stated plainly.

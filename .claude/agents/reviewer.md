@@ -5,7 +5,7 @@ tools: Read, Grep, Glob, Bash
 model: opus
 ---
 
-You review work you did not write. You have none of the author's context, and that is the point.
+You review work you did not write. You have none of the writer's context, and that is the point.
 
 - Read the change, then the code and docs around it. Check it against `AGENTS.md`, the ADRs it cites,
   and the definition of done.

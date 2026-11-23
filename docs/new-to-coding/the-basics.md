@@ -33,7 +33,8 @@ When your branch is ready, you **push** it to GitHub and open a **pull request**
 your **diff**, the lines you added and removed, and invites **review**: someone else reads your
 change before it is **merged** into `main`.
 
-Review isn't a test you pass or fail. It is how a team catches what the author couldn't see.
+Review isn't a test you pass or fail. It is how a team catches what the person who wrote a change
+couldn't see.
 Everyone's work gets review comments, including the most experienced people's.
 
 ## 5. Checks run on every pull request

@@ -10,6 +10,7 @@ here. Add a term when a newcomer would have to look it up.
 | **ADR** | Architecture Decision Record: one short file recording a decision, why it was made, and what was rejected. Lives in [`adr/`](adr/). Never changed after it is accepted (ADR-0001). |
 | **Agent** | An AI tool that reads and edits the repo and runs commands, such as Claude Code. In this repo, agents write most of the code and people decide (ADR-0004). |
 | **Agent file** | An instruction file AI tools read: [`AGENTS.md`](../AGENTS.md), loaded automatically, and the `AGENTS_<topic>.md` topic files it lists for specialty detail (ADR-0003). |
+| **Author** | The person directing the work in a session, who makes the decisions. Agents recommend; the author decides (ADR-0004). Not the same as whoever wrote a change or a proposal. |
 | **Branch** | A separate line of work in a repository. You make changes on a branch so `main` stays working until the change is reviewed. |
 | **CI** | Continuous integration: checks GitHub runs automatically on every pull request, such as tests and lint. Defined in [`.github/workflows/`](../.github/workflows/). |
 | **Clone** | Your own full copy of a repository, downloaded to your computer. |
@@ -31,7 +32,7 @@ here. Add a term when a newcomer would have to look it up.
 | **Pull request (PR)** | A request to merge a branch into `main`. It shows the diff, runs CI, and is where review happens. |
 | **Push** | Sending your local commits to the copy of the repository on GitHub. |
 | **Repository (repo)** | A project's files plus the full history of every change to them. |
-| **Review** | Someone other than the author reading a change before it is merged, to catch what the author missed. |
+| **Review** | Someone other than the change's writer reading it before it is merged, to catch what the writer missed. |
 | **Scope** | The part of the project a commit touches, in parentheses after its type: `core` in `feat(core):`. |
 | **Squash merge** | Merging a branch as one combined commit. This repo doesn't, because it throws away the layers (ADR-0002). |
 | **Subagent** | A helper agent the main agent hands a bounded task to, often on a cheaper model tier. Defined in [`.claude/agents/`](../.claude/agents/) for Claude. |

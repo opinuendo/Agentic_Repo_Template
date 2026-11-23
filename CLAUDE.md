@@ -8,8 +8,9 @@ specific to Claude (ADR-0003). If a note would also matter to another AI tool, i
 
 ## Subagents
 
-Model tiers from `AGENTS.md` map to the subagent definitions in `.claude/agents/`. Why each is set up
-the way it is, and what each settings rule is for, are in [`.claude/README.md`](.claude/README.md).
+Model tiers from `AGENTS_delegation.md` map to the subagent definitions in `.claude/agents/`. Why
+each is set up the way it is, and what each settings rule is for, are in
+[`.claude/README.md`](.claude/README.md).
 
 | Tier | Subagent | `model:` |
 |---|---|---|
