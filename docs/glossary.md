@@ -9,6 +9,7 @@ here. Add a term when a newcomer would have to look it up.
 |---|---|
 | **ADR** | Architecture Decision Record: one short file recording a decision, why it was made, and what was rejected. Lives in [`adr/`](adr/). Never changed after it is accepted (ADR-0001). |
 | **Agent** | An AI tool that reads and edits the repo and runs commands, such as Claude Code. In this repo, agents write most of the code and people decide (ADR-0004). |
+| **Agent file** | An instruction file AI tools read: [`AGENTS.md`](../AGENTS.md), loaded automatically, and the `AGENTS_<topic>.md` topic files it lists for specialty detail (ADR-0003). |
 | **Branch** | A separate line of work in a repository. You make changes on a branch so `main` stays working until the change is reviewed. |
 | **CI** | Continuous integration: checks GitHub runs automatically on every pull request, such as tests and lint. Defined in [`.github/workflows/`](../.github/workflows/). |
 | **Clone** | Your own full copy of a repository, downloaded to your computer. |
@@ -34,7 +35,7 @@ here. Add a term when a newcomer would have to look it up.
 | **Scope** | The part of the project a commit touches, in parentheses after its type: `core` in `feat(core):`. |
 | **Squash merge** | Merging a branch as one combined commit. This repo doesn't, because it throws away the layers (ADR-0002). |
 | **Subagent** | A helper agent the main agent hands a bounded task to, often on a cheaper model tier. Defined in [`.claude/agents/`](../.claude/agents/) for Claude. |
-| **Teaching mode** | An opt-in setting under which agents explain what they did and why, in plain words (ADR-0005). See [`AGENTS.md`](../AGENTS.md). |
+| **Teaching mode** | An opt-in setting under which agents explain what they did and why, in plain words (ADR-0005). See [`AGENTS_teaching.md`](../AGENTS_teaching.md). |
 | **Test** | Code that runs other code and checks that it gives the right result. |
 | **Vulnerability** | A flaw that an attacker could use to do something the software shouldn't allow. |
 | **Workflow** | A script GitHub runs for you on its own machines, such as CI. Files in [`.github/workflows/`](../.github/workflows/). |

@@ -29,8 +29,8 @@ the way it is, and what each settings rule is for, are in [`.claude/README.md`](
   `AGENTS.md` (push, merge, and similar). Change it through a PR, like code.
 - Personal preferences go in `.claude/settings.local.json` or `CLAUDE.local.md`, both git-ignored,
   or in user memory. Never commit them.
-- To switch on [teaching mode](AGENTS.md#teaching-mode) (ADR-0005), add a line saying "Use teaching
-  mode from AGENTS.md" to your `CLAUDE.local.md` or user memory.
+- To switch on [teaching mode](AGENTS_teaching.md) (ADR-0005), add a line saying "Use teaching
+  mode from AGENTS_teaching.md" to your `CLAUDE.local.md` or user memory.
 
 ## Skills and hooks
 

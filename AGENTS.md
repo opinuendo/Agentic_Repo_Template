@@ -23,8 +23,9 @@ the ADR it cites.
   next reader is often an agent with no context, and a README tells it what belongs in a folder before
   it adds something that doesn't. When something here confused you, fix the doc, not just the code.
 - **The repo teaches (ADR-0005).** Terms are defined once, in [`docs/glossary.md`](docs/glossary.md).
-  Learners can switch on [teaching mode](#teaching-mode).
+  If your personal instructions turn on teaching mode, load `AGENTS_teaching.md`.
 - **Tools detect vulnerabilities; agents triage; people decide (ADR-0006).** See [Security](#security).
+- **Specialty detail lives in topic files (ADR-0003).** See [Agent files](#agent-files).
 
 ## Commands
 
@@ -43,7 +44,8 @@ work gets reported as finished when it isn't. CI runs the same commands, set in
 ## Routing
 
 This file is loaded at the start of every session, so it stays short and detail lives in the files
-below, read only when a task needs them.
+below, read only when a task needs them. Agent rules for a specialty are in the
+[Agent files](#agent-files) table instead.
 
 | Task | Load |
 |---|---|
@@ -52,8 +54,6 @@ below, read only when a task needs them.
 | Recording a decision | [`docs/adr/README.md`](docs/adr/README.md), [`docs/adr/template.md`](docs/adr/template.md) |
 | A design not yet decided | [`docs/proposals/README.md`](docs/proposals/README.md) |
 | Committing, branching, opening a PR | [`docs/conventions/commits.md`](docs/conventions/commits.md) |
-| A security alert, failed security check, or CVE question | [Security](#security), [`SECURITY.md`](SECURITY.md), ADR-0006 |
-| Explaining or defining a term; helping a learner | [`docs/glossary.md`](docs/glossary.md), [`docs/learning-path.md`](docs/learning-path.md), [`docs/new-to-coding/`](docs/new-to-coding/) |
 | <your task type> | <the files to read for it> |
 
 ## Rules that are easy to get wrong
@@ -93,14 +93,26 @@ below, read only when a task needs them.
 
 ## Security
 
-- Detection comes from tools reading live databases: Dependabot, dependency review and OSV-Scanner
-  (ADR-0006). Your knowledge stops at your training date, so never judge whether a package is
-  vulnerable from memory.
-- Triage with the most capable tier: check whether this repo uses the vulnerable code, explain the
-  risk in plain words, and draft the fix on a branch as a `fix(deps):` commit.
+The detail is in `AGENTS_security.md`. These rules apply everywhere (ADR-0006):
+
+- Never judge whether a package is vulnerable from memory. Your knowledge stops at your training
+  date; the alert databases are the source of truth.
 - Never dismiss an alert, change its state, or lower its severity. Explain why you think it doesn't
   apply, and a person dismisses it.
-- Say why each new dependency is needed: it is code you didn't write and must keep patched.
+- Say why each new dependency is needed: it's code you didn't write and must keep patched.
+
+## Agent files
+
+Specialty detail goes in `AGENTS_<topic>.md` files at the repo root, so this file stays short
+(ADR-0003). Tools load only this file automatically, so a rule that must never be missed stays here,
+not in a topic file. This table is the complete list, and CI checks that it matches the files.
+
+| File | Load it when |
+|---|---|
+| [`AGENTS_security.md`](AGENTS_security.md) | Working on a security alert, a failed security check, a CVE question, or a new dependency |
+| [`AGENTS_teaching.md`](AGENTS_teaching.md) | Teaching mode is on, or someone is learning |
+
+Rules for one folder go in a short `AGENTS.md` inside that folder instead.
 
 ## Agents and subagents
 
@@ -136,16 +148,3 @@ Agents tend to report work as finished. These make "done" something you can chec
 - Substantial changes had a fresh-context review; the author is the worst judge of their own blind
   spots.
 - What was not done or not verified is stated plainly.
-
-## Teaching mode
-
-Off by default (ADR-0005). A learner switches it on with a line saying "Use teaching mode from
-AGENTS.md" in their own tool's personal, git-ignored instructions (for Claude, see `CLAUDE.md`).
-When it is on:
-
-- Before acting, say in a sentence what you are about to do and why.
-- After acting, explain what changed in plain words, and link the glossary entry, ADR or doc that
-  covers it.
-- Show the command you ran and what it did, so the learner can run it themselves next time.
-- Never simplify the code itself to make it easier to explain. The code meets the same bar either
-  way.

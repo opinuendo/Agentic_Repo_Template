@@ -48,6 +48,7 @@ in correctly, and none of them is specific to one AI tool.
 ```text
 .
 ├── AGENTS.md                       the main agent file: how we work, commands, routing, rules
+├── AGENTS_<topic>.md              specialty detail for agents, e.g. security, teaching
 ├── CLAUDE.md                       imports AGENTS.md; Claude-specific notes only
 ├── README.md                       what the repo is, for people (in the template: the template)
 ├── LICENSE
@@ -139,6 +140,9 @@ ADR-0002.
   that tool's specifics.
 - **Keep `AGENTS.md` short.** It is loaded at the start of every session, so every line costs on every
   task. Aim for under about 150 lines. Detail goes in linked docs, reached through the routing table.
+- **Specialty detail goes in `AGENTS_<topic>.md`** at the repo root, listed in the Agent files table
+  in `AGENTS.md`. Rules that must never be missed stay in `AGENTS.md`, because tools load only that
+  file automatically. CI checks the table matches the files.
 - **Nested `AGENTS.md` files** are fine in large subdirectories with rules of their own; keep them
   just as short.
 
@@ -155,7 +159,7 @@ in context and point back to the docs.
 - **Complete beginners** start in [`docs/new-to-coding/`](docs/new-to-coding/): the basics, then a
   first contribution, step by step.
 - **Terms** are defined once, in [`docs/glossary.md`](docs/glossary.md).
-- **Teaching mode**, defined in `AGENTS.md`, makes an agent explain what it did and why. Each learner
+- **Teaching mode**, defined in `AGENTS_teaching.md`, makes an agent explain what it did and why. Each learner
   switches it on in their own git-ignored settings, so it never changes anyone else's agent.
 
 ## Security
