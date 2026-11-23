@@ -239,10 +239,11 @@ your agent to follow this section, or follow it yourself (ADR-0009).
 - Whether to keep `docs/new-to-coding/` (keep it if anyone on the team is new to coding).
 - Whether the repo is public or private, which changes the GitHub settings in step 5.
 
-**2. Remove the template-only files.** On a new branch, `chore/setup-from-template`, run
-`bash template/cleanup.sh`. It swaps in the project README, removes the template's own proposal, the
-template-only CI check and the `template/` folder, and resets the license holder. It lists the
-placeholders left to fill in. Don't commit yet.
+**2. Remove the template-only files.** On a new branch, `chore/setup-from-template` (or the branch
+your tool assigns), run `bash template/cleanup.sh`. It swaps in the project README, removes the
+template's own proposal, the template-only CI check and the `template/` folder, resets the license
+holder, and records the project's creation in `docs/next-steps.md`. It lists the placeholders left
+to fill in, including the rules line in `AGENTS.md`. Don't commit yet.
 
 **3. Fill in the placeholders** from the answers in step 1:
 
@@ -255,6 +256,9 @@ placeholders left to fill in. Don't commit yet.
   `.github/dependabot.yml`, if decided.
 - If not keeping `docs/new-to-coding/`, delete it and every link to it (search for
   `new-to-coding`).
+
+Keep setup to setup: anything else, such as fleshing out the project idea as a proposal, goes in its
+own pull request after this one merges, so each is reviewed on its own.
 
 Run `python3 .github/scripts/check-links.py` and the test and lint commands, then commit in layers
 (ADR-0002):
