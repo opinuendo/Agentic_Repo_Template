@@ -23,7 +23,7 @@ Docs set the order and the vocabulary; agents explain in context and point back 
   tutorials for general git. Teams that don't need it delete the folder.
 - **[`docs/glossary.md`](../glossary.md)** is the one place terms are defined. Other docs link to it
   instead of defining a term again.
-- **Teaching mode** is defined in `AGENTS.md`, so it means the same thing in every tool. Each learner
+- **Teaching mode** is defined in `AGENTS_teaching.md`, so it means the same thing in every tool. Each learner
   switches it on in their own tool's personal, git-ignored instructions (for Claude,
   `CLAUDE.local.md` or user memory). It is off by default.
 
